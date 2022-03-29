@@ -1,0 +1,12 @@
+{
+    "name" : "Reply文艺复兴",
+    "namespace" : "Reply",
+    "priority" : 30000,
+    "support" : [
+        {
+            "sdk" : "all",
+            "platform" : "all",
+            "model" : "all"
+        }
+    ]
+}
