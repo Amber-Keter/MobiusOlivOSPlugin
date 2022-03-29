@@ -1,0 +1,12 @@
+{
+    "name" : "DW好感度系统",
+    "namespace" : "Favor",
+    "priority" : 30000,
+    "support" : [
+        {
+            "sdk" : "all",
+            "platform" : "all",
+            "model" : "all"
+        }
+    ]
+}

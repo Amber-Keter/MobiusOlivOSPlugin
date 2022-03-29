@@ -1,0 +1,12 @@
+{
+    "name" : "DW用户系统",
+    "namespace" : "DW_User",
+    "priority" : 30000,
+    "support" : [
+        {
+            "sdk" : "all",
+            "platform" : "all",
+            "model" : "all"
+        }
+    ]
+}
