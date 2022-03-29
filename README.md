@@ -1,0 +1,2 @@
+# MobiusOlivOSPlugin
+一个适用于OlivOS框架的插件合集
