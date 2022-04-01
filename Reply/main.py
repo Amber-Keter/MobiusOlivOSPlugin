@@ -5,6 +5,7 @@ import random
 import time
 import OlivaDiceCore
 import os
+import OlivOS
 '''
                         _               _  __    _
         /\             | |             | |/ /   | |
@@ -254,9 +255,11 @@ def Check_admin(plugin_event):
 
 def ReplyFunction(plugin_event, Proc):
     selfid = str(plugin_event.bot_info.id)
-    temp = re.compile(OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ() + r'?\*reply(level|leveldel|mode)?\s+(\S+)\s*(\S*)') # 正则匹配reply指令
-    string = plugin_event.data.message  #接收到的消息内容
+    temp = re.compile(r'\s*\*reply(level|leveldel|mode)?\s+(\S+)\s*(\S*)') # 正则匹配reply指令
+    string:str = plugin_event.data.message  #接收到的消息内容
     reply = Reply(plugin_event)
+    if string.startswith(OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ()):
+        string = string.replace(OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ(),'')
     temp = temp.match(string)
     if temp:  # 匹配到了reply开头的指令后的操作
         length = temp.end()
@@ -264,23 +267,12 @@ def ReplyFunction(plugin_event, Proc):
         if flag_have_change_permission == True and length == len(string):  # 如果具有修改权限
             res = temp.groups()
             if res:
-                t = []
-                for i in res:
-                    t.append(i)
-                res = t
-                del res[0]
                 if res[0] == 'mode':
                     '''
                     这一段未经测试
                     没理解设计意图
                     '''
                     reply_text = reply.mode(res)
-                elif res[0] == 'level' or res[0] == 'leveldel':
-                    '''
-                    这一段未经测试
-                    没理解设计意图
-                    '''
-                    reply_text = reply.level(res)
                 elif res[1] == 'on' or res[1] == 'off':
                     '''
                     通过常规测试和简单的发散性测试

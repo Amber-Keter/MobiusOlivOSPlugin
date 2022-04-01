@@ -428,12 +428,12 @@ def Check_admin(plugin_event):
     return flag_is_from_master or flag_is_from_group_admin
 
 def ReplyFunction(plugin_event,Proc):
-    selfid = str(plugin_event.bot_info.id)
-    temp_re = OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ() + r'?\s*\*favor\s*(on|off)'
-    print(temp_re)
-
-    temp = re.compile(temp_re) # 正则匹配reply指令
     string = plugin_event.data.message  #接收到的消息内容
+    selfid = str(plugin_event.bot_info.id)
+    temp_re = r'\s*\*favor\s*(on|off)'
+    if string.startswith(OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ()):
+        string = string.replace(OlivOS.messageAPI.PARA.at(plugin_event.base_info['self_id']).CQ(),'')
+    temp = re.compile(temp_re) # 正则匹配reply指令
     reply = Favor(plugin_event)
     temp = temp.match(string)
     if temp:  # 匹配到了reply开头的指令后的操作
