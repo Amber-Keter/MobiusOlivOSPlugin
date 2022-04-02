@@ -89,7 +89,7 @@ def MID(s:str,plugin_event = None,User = None):
                 reL.append(False)
                 continue
         reL.append(i)
-    if User is not dict:
+    if type(User) is not dict:
         User:dict = ReadJson(path('Data'))
     if reL[0]:
         id = reL[0].groups()[0]

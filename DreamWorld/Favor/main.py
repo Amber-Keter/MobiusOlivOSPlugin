@@ -65,10 +65,10 @@ def path(p:str,dir = 'Favor'):
 
 #词条抽取函数
 def Rand(s):
-    if s is list:
+    if type(s) is list:
         t = []
         for i in s:
-            if i is dict:
+            if type(i) is dict:
                 权重 = i.get('weights',1)
                 for j in range(权重):
                     t.append(i)
@@ -133,8 +133,6 @@ class Favor:
         self.conf["now"] = str(time.time())
         self.conf['selfid'] = plugin_event.bot_info.id
 
-
-
     def save(self):
         WriteJson(path('Data'),self.Favor)   #写入到指定文件里去
 
@@ -166,7 +164,7 @@ class Favor:
             if re_temp:
                 if re_temp.end() != len(string):
                     continue
-                if v is not dict:
+                if type(v) is not dict:
                     return Rand(v)
                 v:dict
                 mode = v.get('mode','unity')
@@ -183,8 +181,9 @@ class Favor:
                 today_frequency = data.get('today_frequency',0)
                 now = time.time()
                 difference = now - last_triggered
-                if r is not dict:
+                if type(r) is not dict:
                     res = Rand(r)
+                    r_class = 'common'
                 else:
                     r:dict
                     type_list = ['special','level','favor','common']
@@ -207,14 +206,15 @@ class Favor:
                             level = level_data.get(self.uid,level_default)
                         except:
                             level = 1
+                        r_class = 'common'
                         if r_common:
-                            if r_common is list:
+                            if type(r_common) is list:
                                 res = Rand(r_common)
                             else:
                                 res = r_common
                             r_class = 'common'
                         if r_favor:
-                            if r_favor is not list:
+                            if type(r_favor) is not list:
                                 temp_list = []
                                 temp_list.append(r_favor)
                                 temp_list,r_favor = r_favor,temp_list
@@ -225,7 +225,7 @@ class Favor:
                                     res = i.get('reply',None)
                                     r_class = 'favor'
                                     break
-                                elif interval is list:
+                                elif type(interval) is list:
                                     left = True
                                     right = True
                                     if interval[0] and favor < interval[0]:
@@ -234,10 +234,10 @@ class Favor:
                                         right = False
                                     if left and right:
                                         res = i.get('reply',None)
-                                        t_class = 'favor'
+                                        r_class = 'favor'
                                         break
                         if r_level:
-                            if r_level is not list:
+                            if type(r_level) is not list:
                                 temp_list = []
                                 temp_list.append(r_level)
                                 temp_list,r_level = r_level,temp_list
@@ -248,7 +248,7 @@ class Favor:
                                     res = i.get('reply',None)
                                     r_class = 'level'
                                     break
-                                elif interval is list:
+                                elif type(interval) is list:
                                     left = True
                                     right = True
                                     if interval[0] and level < interval[0]:
@@ -257,10 +257,10 @@ class Favor:
                                         right = False
                                     if left and right:
                                         res = i.get('reply',None)
-                                        t_class = 'level'
+                                        r_class = 'level'
                                         break
                         if r_special:
-                            if r_special is not list:
+                            if type(r_special) is not list:
                                 temp_list = []
                                 temp_list.append(r_special)
                                 temp_list,r_special = r_special,temp_list
@@ -270,12 +270,12 @@ class Favor:
                                     res = i.get('reply',None)
                                     r_class = 'special'
                                     break
-                                elif uid_list is list:
+                                elif type(uid_list) is list:
                                     if self.uid in uid_list:
                                         res = i.get('reply',None)
                                         r_class = 'special'
                                         break
-                if res is dict:
+                if type(res) is dict:
                     cd = res.get('cd',cd_default)
                     max = res.get('max',max_default)
                     change = res.get('change',0)
@@ -286,9 +286,9 @@ class Favor:
                     change = 0
                     success = True    
                 all_interval = ['special','level','favor','common']    
-                if cd is list:
+                if type(cd) is list:
                     cd:list
-                    num = cd.count()
+                    num = len(cd)
                     if num == 2:
                         cd_reply = cd[1]
                         cd_interval = all_interval
@@ -299,14 +299,14 @@ class Favor:
                         cd_reply = None
                         cd_interval = all_interval
                     cd = cd[0]
-                elif cd is int:
+                elif type(cd) is int:
                     cd_reply = None
                     cd_interval = all_interval
-                elif cd is dict:
+                elif type(cd) is dict:
                     cd = cd.get(r_class,[0,None])
-                    if cd is list:
+                    if type(cd) is list:
                         cd:list
-                        num = cd.count()
+                        num = len(cd)
                         if num == 2:
                             cd_reply = cd[1]
                             cd_interval = r_class
@@ -317,12 +317,12 @@ class Favor:
                             cd_reply = None
                             cd_interval = r_class
                         cd = cd[0]
-                    elif cd is int:
+                    elif type(cd) is int:
                         cd_reply = None
                         cd_interval = r_class
-                if max is list:
+                if type(max) is list:
                     max:list
-                    num = max.count()
+                    num = len(max)
                     if num == 2:
                         max_reply = max[1]
                         max_interval = all_interval
@@ -333,14 +333,14 @@ class Favor:
                         max_reply = None
                         max_interval = all_interval
                     max = max[0]
-                elif max is int:
+                elif type(max) is int:
                     max_reply = None
                     max_interval = all_interval
-                elif max is dict:
+                elif type(max) is dict:
                     max = max.get(r_class,[0,None])
-                    if max is list:
+                    if type(max) is list:
                         max:list
-                        num = max.count()
+                        num = len(max)
                         if num == 2:
                             max_reply = max[1]
                             max_interval = r_class
@@ -351,31 +351,33 @@ class Favor:
                             max_reply = None
                             max_interval = r_class
                         max = max[0]
-                    elif max is int:
+                    elif type(max) is int:
                         max_reply = None
                         max_interval = r_class
                 left_cd = cd - difference
                 if cd > 0:
-                    if r_class == cd_interval or r_class in cd_interval:
+                    if (r_class == cd_interval) or (r_class in cd_interval):
                         if left_cd > 0:
-                            if cd_reply is str:
+                            if type(cd_reply) is str:
                                 cd_reply:str
                                 cd_reply = cd_reply.format(时间差值 = left_cd,**self.conf)
                             return cd_reply
-                now_date = time.strftime("%Y-%m-%d", time.time())
-                last_date = time.strftime("%Y-%m-%d", last_triggered)
+                now_date = time.strftime("%Y-%m-%d", time.localtime(time.time()))
+                last_date = time.strftime("%Y-%m-%d", time.localtime(last_triggered))
                 if max > 0:
                     if r_class == max_interval or r_class in max_interval:
                         if now_date == last_date:
                             if today_frequency >= max:
-                                if max_reply is str:
+                                if type(max_reply) is str:
                                     max_reply:str
                                     max_reply = cd_reply.format(一日上限 = max,**self.conf)
                                 return max_reply
                         else:
                             today_frequency = 0
-                res = Rand(res.get('reply',None))
-                if res is dict:
+                if type(res) is dict:
+                    res = res.get('reply',None)
+                res = Rand(res)
+                if type(res) is dict:
                     res:dict
                     change = res.get("change",change)
                     success = res.get('success',success)
@@ -385,7 +387,7 @@ class Favor:
                 if success:
                     today_frequency += 1
                     self.Favor[self.uid]['data'][k] = {'last_triggered':time.time(),'today_frequency':today_frequency}
-                if change is list:
+                if type(change) is list:
                     change_max = 10000
                     if change[0] == None:
                         change[0] = -change_max
@@ -396,7 +398,7 @@ class Favor:
                     change_reply = self.conf.get('FavorChange',None)
                     self.Favor[self.uid]['favor'] += change
                     change_abs = abs(change)
-                    if change_reply is dict:
+                    if type(change_reply) is dict:
                         change_reply:dict
                         if change > 0:
                             change_reply = change_reply.get('up',None)
@@ -404,7 +406,11 @@ class Favor:
                             change_reply = change_reply.get('down',None)
                     change_reply:str
                     change_reply = '\n' + change_reply.format(change=change,change_abs=change_abs,now_favor=self.Favor[self.uid]['favor'],favor=favor,**self.conf)
+                else:
+                    change_reply = None
                 res:str
+                if res == None:
+                    return None
                 res = res.format(*re_temp.groups(),**self.conf)
                 self.save()
                 if change_reply:
@@ -441,10 +447,9 @@ def ReplyFunction(plugin_event,Proc):
         flag_have_change_permission = Check_admin(plugin_event) #检查是否具有修改权限
         if flag_have_change_permission == True and length == len(string):  # 如果具有修改权限
             res = temp.groups()
-            plugin_event.reply('[cq:at,id=1761089294]')
             if res:               
-                if res[1] == 'on' or res[1] == 'off':
-                    reply_text = reply.switch(res[1])
+                if res[0] == 'on' or res[0] == 'off':
+                    reply_text = reply.switch(res[0])
                 if reply_text:  # 用于返回reply指令处理后的操作
                     plugin_event.reply(reply_text)
     else:  # 正常返回reply内容
