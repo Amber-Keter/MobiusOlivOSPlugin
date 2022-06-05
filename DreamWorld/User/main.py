@@ -59,7 +59,7 @@ class Event(object):
         ReplyFunction(plugin_event,Proc)
     #群聊
     def save(plugin_event,Proc):
-        WriteJson(path('Data'),User(plugin_event).User)
+        pass
 
 
 
