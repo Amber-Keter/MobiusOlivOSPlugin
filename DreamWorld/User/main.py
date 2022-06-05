@@ -7,6 +7,7 @@ import os
 import uuid
 import sys
 
+
 '''
                         _               _  __    _
         /\             | |             | |/ /   | |
@@ -78,6 +79,7 @@ def WriteJson(path:str,data:dict):
 def path(p:str):
     return 'plugin/data/DreamWorld/User/{}.json'.format(p)
 
+#MID函数
 def MID(s:str,plugin_event = None,User = None):
     platform = plugin_event.platform['platform']
     reList = [r'\[cq:at,qq=(\S+)\]',r'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})']
