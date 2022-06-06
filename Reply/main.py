@@ -119,6 +119,7 @@ class Reply:
         暂时没理解干啥用的
         未经测试
         '''
+        self.p = plugin_event
         self.user: str = str(plugin_event.data.user_id)
         self.group = None  #初始化群聊数据
         if 'host_id' in plugin_event.data.__dict__:  #判断是否存在群聊或频道，若存在，写入id
@@ -230,12 +231,38 @@ class Reply:
                     elif keywords_values['mode'] == 'private' and self.group:
                         return
                     if type(keywords_values['reply']) == list:
-                        r: str = random.choice(keywords_values['reply'])
+                        temp_reply:list = keywords_values['reply']
+                        for i in temp_reply:
+                            temp_str = i
+                            re_card = re.compile(r"[\S\s]*(\{[\$%]\S+\})[\S\s]*")
+                            temp_card = re_card.match(temp_str)
+                            re_draw_key = re.compile(r'\{[\$%](\S+)\}')
+                            while temp_card != None:
+                                temp_card = temp_card.groups()[0]
+                                temp_draw_key = re_draw_key.match(temp_card).groups()[0]
+                                temp_draw = OlivaDiceCore.drawCard.draw(temp_draw_key,self.p.bot_info.hash,False)
+                                if type(temp_draw) is not str:
+                                    temp_draw = ''
+                                temp_str = temp_str.replace(temp_card,temp_draw,1)
+                                temp_card = re_card.match(temp_str)
+                            if temp_str != i:
+                                temp_reply.remove(i)
+                                temp_reply.append(temp_str)
+                        for i in temp_reply:
+                            i:str
+                            re_weights = re.compile(r"^(::\d+::)")
+                            temp_weights = re_weights.match(i)
+                            if temp_weights:
+                                weights:str = temp_weights.groups()[0]
+                                temp_str = i.lstrip(weights)
+                                weights = int(weights.strip(':'))
+                                temp_reply.remove(i)
+                                for j in range(weights):
+                                    temp_reply.append(temp_str)
+                        r: str = random.choice(temp_reply)
                     else:
                         r: str = keywords_values['reply']
                     return r.format(*temp.groups(), **self.conf)
-
-
 
 def Check_admin(plugin_event):
     '''
