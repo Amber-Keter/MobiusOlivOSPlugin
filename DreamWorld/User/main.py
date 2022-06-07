@@ -175,6 +175,13 @@ class User:
         }
         s = "用户名：{name}\n平台：{platform}\n账号：{id}\n用户ID：{uid}".format(**d)
         c = self.User.get('Link',{}).get(self.platform,{}).get(self.id,'guest')
+        t = c
+        while t != 'guest':                             #向上寻根
+            user = self.User.get('User',{}).get(c,{})
+            platform = user["platform"]
+            id = user["id"]
+            c = self.User.get('Link',{}).get(platform,{}).get(id,"guest")
+            t = c
         if c != 'guest':
             s += "\n关联用户ID：{}".format(c)
         return s
@@ -190,15 +197,25 @@ class User:
                 return "无可断开的关联。"
         elif how == 'to':
             uid = MID(s,self.p,self.User)
-            if uid[0]:
+            if uid[0]:  #正常处理
                 uid = uid[1]
-            else:
+            else:       #错误信息
                 return uid[1]
             u = self.User.get('User',{}).get(uid,{})
             id = u.get('id',None)
             platform = u.get('platform',None)
             if id == self.id and platform == self.platform:
                 return "Error!不能关联自己!"
+            c = self.User.get('Link',{}).get(platform,{}).get(id,"guest")
+            t = c
+            while t != 'guest':     #防环化
+                if t == self.uid:
+                    return "Error!被关联者不可为自身子关联者!"
+                t_user = self.User.get('User',{}).get(c,{})
+                t_platform = t_user["platform"]
+                t_id = t_user["id"]
+                c = self.User.get('Link',{}).get(t_platform,{}).get(t_id,"guest")
+                t = c
             if id and platform:
                 t_To = [id,platform]
                 t_From = [self.id,self.platform]
