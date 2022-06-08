@@ -115,6 +115,7 @@ class User:
             self.uid = self.User['Guest'][self.platform][self.id]
             self.name = self.User['User'][self.uid]['name']
             tmp_father = self.User.get('Link',{}).get(self.platform,{}).get(self.id,'guest')
+            tmp_uid = self.uid
             while tmp_father != 'guest':    #寻找根节点
                 tmp_uid = tmp_father
                 tmp = self.User.get("User",{}).get(tmp_uid,{})
