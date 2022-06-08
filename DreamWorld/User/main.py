@@ -2,7 +2,6 @@
 import json                             #json序列化与反序列化模块
 import re                               #正则表达式库，用于匹配指令
 import time
-import OlivaDiceCore
 import os
 import uuid
 import sys
@@ -118,7 +117,7 @@ def MID(s:str,plugin_event = None,User = None):
 
 #User类
 class User:
-    def __init__(self,plugin_event) -> None:
+    def __init__(self,plugin_event):
         self.p = plugin_event
         self.id:str = str(plugin_event.data.user_id)
         self.platform = plugin_event.platform['platform']

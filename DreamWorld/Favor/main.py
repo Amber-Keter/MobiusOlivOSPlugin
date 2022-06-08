@@ -86,7 +86,7 @@ def GetUser(uid):
 
 #用户类
 class User:
-    def __init__(self,plugin_event) -> None:
+    def __init__(self,plugin_event):
         self.p = plugin_event
         self.id:str = str(plugin_event.data.user_id)
         self.platform = plugin_event.platform['platform']
@@ -114,13 +114,24 @@ class User:
         else:
             self.uid = self.User['Guest'][self.platform][self.id]
             self.name = self.User['User'][self.uid]['name']
-    
+            tmp_father = self.User.get('Link',{}).get(self.platform,{}).get(self.id,'guest')
+            while tmp_father != 'guest':    #寻找根节点
+                tmp_uid = tmp_father
+                tmp = self.User.get("User",{}).get(tmp_uid,{})
+                tmp_id = tmp.get('id',None)
+                tmp_platform = tmp.get('platform',None)
+                tmp_father = self.User.get('Link',{}).get(tmp_platform,{}).get(tmp_id,'guest')
+            self.uid = tmp_uid
+            tmp_user = self.User.get("User",{}).get(self.uid,{})
+            self.id = tmp_user.get('id',None)
+            self.name = tmp_user.get('name',self.name)
+
     def save(self):
         WriteJson(path('Data','User'),self.User)   #写入到指定文件里去
 
 #主体类
 class Favor:
-    def __init__(self,plugin_event) -> None:
+    def __init__(self,plugin_event):
         self.p = plugin_event
         self.User = User(plugin_event)
         if self.User.User.get('Link',{}).get(self.User.platform,{}).get(self.User.id,'guest') != 'guest':
@@ -382,6 +393,17 @@ class Favor:
                     change = res.get("change",change)
                     success = res.get('success',success)
                     res = Rand(res.get('str',None))
+                re_card = re.compile(r"[\S\s]*(\{[\$%]\S+\})[\S\s]*")
+                temp_card = re_card.match(res)
+                re_draw_key = re.compile(r'\{[\$%](\S+)\}')
+                while temp_card != None:
+                    temp_card = temp_card.groups()[0]
+                    temp_draw_key = re_draw_key.match(temp_card).groups()[0]
+                    temp_draw = OlivaDiceCore.drawCard.draw(temp_draw_key,self.p.bot_info.hash,False)
+                    if type(temp_draw) is not str:
+                        temp_draw = ''
+                    res = res.replace(temp_card,temp_draw,1)
+                    temp_card = re_card.match(res)
                 if self.Favor.get(self.uid,False) == False:
                     self.Favor[self.uid] = {'favor':0,'data':{}}
                 if success:
