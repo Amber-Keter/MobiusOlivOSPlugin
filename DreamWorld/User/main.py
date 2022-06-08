@@ -28,6 +28,12 @@ class Event(object):
             os.mkdir("plugin/data/DreamWorld")
         if not os.path.exists("plugin/data/DreamWorld/User"):
             os.mkdir("plugin/data/DreamWorld/User")
+        if not os.path.exists("plugin/lib"):
+            os.mkdir("plugin/lib")
+        if not os.path.exists("plugin/lib/DreamWorldLib"):
+            os.mkdir("plugin/lib/DreamWorldLib")
+        if 'plugin/lib/DreamWorldLib' not in sys.path:
+            sys.path.insert(1,'plugin/lib/DreamWorldLib')
         try:
             ReadJson(path('Data'))
         except:
