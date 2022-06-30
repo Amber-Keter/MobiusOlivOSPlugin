@@ -176,264 +176,267 @@ class Favor:
             if re_temp:
                 if re_temp.end() != len(string):
                     continue
-                if type(v) is not dict:
-                    return Rand(v)
-                v:dict
-                mode = v.get('mode','unity')
-                if mode == 'group' and self.User.group == None:
-                    return
-                if mode == 'private' and self.User.group:
-                    return
                 user = GetUser(self.uid)
-                max_default = v.get('max',None)
-                cd_default = v.get('cd',None)
-                r = v.get('return',None)
-                data = self.Favor.get(self.uid,{}).get('data',{}).get(k,{})
-                last_triggered = data.get('last_triggered',0)
-                today_frequency = data.get('today_frequency',0)
-                now = time.time()
-                difference = now - last_triggered
-                if type(r) is not dict:
-                    res = Rand(r)
-                    r_class = 'common'
+                self.conf['user'] = user
+                if type(v) is not dict:
+                    res = Rand(v)
                 else:
-                    r:dict
-                    type_list = ['special','level','favor','common']
-                    key_exist = False
-                    for i in type_list:
-                        if i in r.keys():
-                            key_exist = True
-                    if key_exist == False:
-                        res = r
-                    else:
-                        r_special = r.get('special',None)
-                        r_level = r.get('level',None)
-                        r_favor = r.get('favor',None)
-                        r_common = r.get('common',None)
-                        favor = self.Favor.get(self.uid,{}).get('favor',0)
-                        try:
-                            level_data:dict = ReadJson(path('Data','Level'))
-                            level_config:dict = ReadJson(path('Config','Level'))
-                            level_default = level_config.get('default',1)
-                            level = level_data.get(self.uid,level_default)
-                        except:
-                            level = 1
+                    v:dict
+                    mode = v.get('mode','unity')
+                    if mode == 'group' and self.User.group == None:
+                        return
+                    if mode == 'private' and self.User.group:
+                        return
+                    max_default = v.get('max',None)
+                    cd_default = v.get('cd',None)
+                    r = v.get('return',None)
+                    data = self.Favor.get(self.uid,{}).get('data',{}).get(k,{})
+                    last_triggered = data.get('last_triggered',0)
+                    today_frequency = data.get('today_frequency',0)
+                    now = time.time()
+                    difference = now - last_triggered
+                    if type(r) is not dict:
+                        res = Rand(r)
                         r_class = 'common'
-                        if r_common:
-                            if type(r_common) is list:
-                                res = Rand(r_common)
-                            else:
-                                res = r_common
+                    else:
+                        r:dict
+                        type_list = ['special','level','favor','common']
+                        key_exist = False
+                        for i in type_list:
+                            if i in r.keys():
+                                key_exist = True
+                        if key_exist == False:
+                            res = r
+                        else:
+                            r_special = r.get('special',None)
+                            r_level = r.get('level',None)
+                            r_favor = r.get('favor',None)
+                            r_common = r.get('common',None)
+                            favor = self.Favor.get(self.uid,{}).get('favor',0)
+                            try:
+                                level_data:dict = ReadJson(path('Data','Level'))
+                                level_config:dict = ReadJson(path('Config','Level'))
+                                level_default = level_config.get('default',1)
+                                level = level_data.get(self.uid,level_default)
+                            except:
+                                level = 1
                             r_class = 'common'
-                        if r_favor:
-                            if type(r_favor) is not list:
-                                temp_list = []
-                                temp_list.append(r_favor)
-                                temp_list,r_favor = r_favor,temp_list
-                            for i in r_favor:
-                                i:dict
-                                interval = i.get('interval',[None,None])
-                                if interval is int and favor == interval:
-                                    res = i.get('reply',None)
-                                    r_class = 'favor'
-                                    break
-                                elif type(interval) is list:
-                                    left = True
-                                    right = True
-                                    if interval[0] and favor < interval[0]:
-                                        left = False
-                                    if interval[1] and favor > interval[1]:
-                                        right = False
-                                    if left and right:
+                            if r_common:
+                                if type(r_common) is list:
+                                    res = Rand(r_common)
+                                else:
+                                    res = r_common
+                                r_class = 'common'
+                            if r_favor:
+                                if type(r_favor) is not list:
+                                    temp_list = []
+                                    temp_list.append(r_favor)
+                                    temp_list,r_favor = r_favor,temp_list
+                                for i in r_favor:
+                                    i:dict
+                                    interval = i.get('interval',[None,None])
+                                    if interval is int and favor == interval:
                                         res = i.get('reply',None)
                                         r_class = 'favor'
                                         break
-                        if r_level:
-                            if type(r_level) is not list:
-                                temp_list = []
-                                temp_list.append(r_level)
-                                temp_list,r_level = r_level,temp_list
-                            for i in r_level:
-                                i:dict
-                                interval = i.get('interval',[None,None])
-                                if interval is int and level == interval:
-                                    res = i.get('reply',None)
-                                    r_class = 'level'
-                                    break
-                                elif type(interval) is list:
-                                    left = True
-                                    right = True
-                                    if interval[0] and level < interval[0]:
-                                        left = False
-                                    if interval[1] and level > interval[1]:
-                                        right = False
-                                    if left and right:
+                                    elif type(interval) is list:
+                                        left = True
+                                        right = True
+                                        if interval[0] and favor < interval[0]:
+                                            left = False
+                                        if interval[1] and favor > interval[1]:
+                                            right = False
+                                        if left and right:
+                                            res = i.get('reply',None)
+                                            r_class = 'favor'
+                                            break
+                            if r_level:
+                                if type(r_level) is not list:
+                                    temp_list = []
+                                    temp_list.append(r_level)
+                                    temp_list,r_level = r_level,temp_list
+                                for i in r_level:
+                                    i:dict
+                                    interval = i.get('interval',[None,None])
+                                    if interval is int and level == interval:
                                         res = i.get('reply',None)
                                         r_class = 'level'
                                         break
-                        if r_special:
-                            if type(r_special) is not list:
-                                temp_list = []
-                                temp_list.append(r_special)
-                                temp_list,r_special = r_special,temp_list
-                            for i in r_special:
-                                uid_list = i.get('uid',[])
-                                if uid_list is str and self.uid == uid_list:
-                                    res = i.get('reply',None)
-                                    r_class = 'special'
-                                    break
-                                elif type(uid_list) is list:
-                                    if self.uid in uid_list:
+                                    elif type(interval) is list:
+                                        left = True
+                                        right = True
+                                        if interval[0] and level < interval[0]:
+                                            left = False
+                                        if interval[1] and level > interval[1]:
+                                            right = False
+                                        if left and right:
+                                            res = i.get('reply',None)
+                                            r_class = 'level'
+                                            break
+                            if r_special:
+                                if type(r_special) is not list:
+                                    temp_list = []
+                                    temp_list.append(r_special)
+                                    temp_list,r_special = r_special,temp_list
+                                for i in r_special:
+                                    uid_list = i.get('uid',[])
+                                    if uid_list is str and self.uid == uid_list:
                                         res = i.get('reply',None)
                                         r_class = 'special'
                                         break
-                if type(res) is dict:
-                    cd = res.get('cd',cd_default)
-                    max = res.get('max',max_default)
-                    change = res.get('change',0)
-                    success = res.get('success',True)
-                else:
-                    cd = cd_default
-                    max = max_default
-                    change = 0
-                    success = True    
-                all_interval = ['special','level','favor','common']    
-                if type(cd) is list:
-                    cd:list
-                    num = len(cd)
-                    if num == 2:
-                        cd_reply = cd[1]
-                        cd_interval = all_interval
-                    elif num == 3:
-                        cd_reply = cd[1]
-                        cd_interval = cd[2]
+                                    elif type(uid_list) is list:
+                                        if self.uid in uid_list:
+                                            res = i.get('reply',None)
+                                            r_class = 'special'
+                                            break
+                    if type(res) is dict:
+                        cd = res.get('cd',cd_default)
+                        max = res.get('max',max_default)
+                        change = res.get('change',0)
+                        success = res.get('success',True)
                     else:
-                        cd_reply = None
-                        cd_interval = all_interval
-                    cd = cd[0]
-                elif type(cd) is int:
-                    cd_reply = None
-                    cd_interval = all_interval
-                elif type(cd) is dict:
-                    cd = cd.get(r_class,[0,None])
+                        cd = cd_default
+                        max = max_default
+                        change = 0
+                        success = True    
+                    all_interval = ['special','level','favor','common']    
                     if type(cd) is list:
                         cd:list
                         num = len(cd)
                         if num == 2:
                             cd_reply = cd[1]
-                            cd_interval = r_class
+                            cd_interval = all_interval
                         elif num == 3:
                             cd_reply = cd[1]
                             cd_interval = cd[2]
                         else:
                             cd_reply = None
-                            cd_interval = r_class
+                            cd_interval = all_interval
                         cd = cd[0]
                     elif type(cd) is int:
                         cd_reply = None
-                        cd_interval = r_class
-                if type(max) is list:
-                    max:list
-                    num = len(max)
-                    if num == 2:
-                        max_reply = max[1]
-                        max_interval = all_interval
-                    elif num == 3:
-                        max_reply = max[1]
-                        max_interval = max[2]
-                    else:
-                        max_reply = None
-                        max_interval = all_interval
-                    max = max[0]
-                elif type(max) is int:
-                    max_reply = None
-                    max_interval = all_interval
-                elif type(max) is dict:
-                    max = max.get(r_class,[0,None])
+                        cd_interval = all_interval
+                    elif type(cd) is dict:
+                        cd = cd.get(r_class,[0,None])
+                        if type(cd) is list:
+                            cd:list
+                            num = len(cd)
+                            if num == 2:
+                                cd_reply = cd[1]
+                                cd_interval = r_class
+                            elif num == 3:
+                                cd_reply = cd[1]
+                                cd_interval = cd[2]
+                            else:
+                                cd_reply = None
+                                cd_interval = r_class
+                            cd = cd[0]
+                        elif type(cd) is int:
+                            cd_reply = None
+                            cd_interval = r_class
                     if type(max) is list:
                         max:list
                         num = len(max)
                         if num == 2:
                             max_reply = max[1]
-                            max_interval = r_class
+                            max_interval = all_interval
                         elif num == 3:
                             max_reply = max[1]
                             max_interval = max[2]
                         else:
                             max_reply = None
-                            max_interval = r_class
+                            max_interval = all_interval
                         max = max[0]
                     elif type(max) is int:
                         max_reply = None
-                        max_interval = r_class
-                left_cd = cd - difference
-                if cd > 0:
-                    if (r_class == cd_interval) or (r_class in cd_interval):
-                        if left_cd > 0:
-                            if type(cd_reply) is str:
-                                cd_reply:str
-                                cd_reply = cd_reply.format(时间差值 = left_cd,**self.conf)
-                            return cd_reply
-                now_date = time.strftime("%Y-%m-%d", time.localtime(time.time()))
-                last_date = time.strftime("%Y-%m-%d", time.localtime(last_triggered))
-                if max > 0:
-                    if r_class == max_interval or r_class in max_interval:
-                        if now_date == last_date:
-                            if today_frequency >= max:
-                                if type(max_reply) is str:
-                                    max_reply:str
-                                    max_reply = cd_reply.format(一日上限 = max,**self.conf)
-                                return max_reply
-                        else:
-                            today_frequency = 0
-                if type(res) is dict:
-                    res = res.get('reply',None)
-                res = Rand(res)
-                if type(res) is dict:
-                    res:dict
-                    change = res.get("change",change)
-                    success = res.get('success',success)
-                    res = Rand(res.get('str',None))
-                re_card = re.compile(r"[\S\s]*(\{[\$%]\S+\})[\S\s]*")
-                temp_card = re_card.match(res)
-                re_draw_key = re.compile(r'\{[\$%](\S+)\}')
-                while temp_card != None:
-                    temp_card = temp_card.groups()[0]
-                    temp_draw_key = re_draw_key.match(temp_card).groups()[0]
-                    temp_draw = OlivaDiceCore.drawCard.draw(temp_draw_key,self.p.bot_info.hash,False)
-                    if type(temp_draw) is not str:
-                        temp_draw = ''
-                    res = res.replace(temp_card,temp_draw,1)
+                        max_interval = all_interval
+                    elif type(max) is dict:
+                        max = max.get(r_class,[0,None])
+                        if type(max) is list:
+                            max:list
+                            num = len(max)
+                            if num == 2:
+                                max_reply = max[1]
+                                max_interval = r_class
+                            elif num == 3:
+                                max_reply = max[1]
+                                max_interval = max[2]
+                            else:
+                                max_reply = None
+                                max_interval = r_class
+                            max = max[0]
+                        elif type(max) is int:
+                            max_reply = None
+                            max_interval = r_class
+                    left_cd = cd - difference
+                    if cd > 0:
+                        if (r_class == cd_interval) or (r_class in cd_interval):
+                            if left_cd > 0:
+                                if type(cd_reply) is str:
+                                    cd_reply:str
+                                    cd_reply = cd_reply.format(时间差值 = left_cd,**self.conf)
+                                return cd_reply
+                    now_date = time.strftime("%Y-%m-%d", time.localtime(time.time()))
+                    last_date = time.strftime("%Y-%m-%d", time.localtime(last_triggered))
+                    if max > 0:
+                        if r_class == max_interval or r_class in max_interval:
+                            if now_date == last_date:
+                                if today_frequency >= max:
+                                    if type(max_reply) is str:
+                                        max_reply:str
+                                        max_reply = cd_reply.format(一日上限 = max,**self.conf)
+                                    return max_reply
+                            else:
+                                today_frequency = 0
+                    if type(res) is dict:
+                        res = res.get('reply',None)
+                    res = Rand(res)
+                    if type(res) is dict:
+                        res:dict
+                        change = res.get("change",change)
+                        success = res.get('success',success)
+                        res = Rand(res.get('str',None))
+                    re_card = re.compile(r"[\S\s]*(\{[\$%]\S+\})[\S\s]*")
                     temp_card = re_card.match(res)
-                if self.Favor.get(self.uid,False) == False:
-                    self.Favor[self.uid] = {'favor':0,'data':{}}
-                if success:
-                    today_frequency += 1
-                    self.Favor[self.uid]['data'][k] = {'last_triggered':time.time(),'today_frequency':today_frequency}
-                if type(change) is list:
-                    change_max = 10000
-                    if change[0] == None:
-                        change[0] = -change_max
-                    if change[1] == None:
-                        change[1] = change_max
-                    change = random.randint(change[0],change[1])
-                if change != 0:
-                    change_reply = self.conf.get('FavorChange',None)
-                    self.Favor[self.uid]['favor'] += change
-                    change_abs = abs(change)
-                    if type(change_reply) is dict:
-                        change_reply:dict
-                        if change > 0:
-                            change_reply = change_reply.get('up',None)
-                        else:
-                            change_reply = change_reply.get('down',None)
-                    change_reply:str
-                    change_reply = '\n' + change_reply.format(change=change,change_abs=change_abs,now_favor=self.Favor[self.uid]['favor'],favor=favor,**self.conf)
-                else:
-                    change_reply = None
+                    re_draw_key = re.compile(r'\{[\$%](\S+)\}')
+                    while temp_card != None:
+                        temp_card = temp_card.groups()[0]
+                        temp_draw_key = re_draw_key.match(temp_card).groups()[0]
+                        temp_draw = OlivaDiceCore.drawCard.draw(temp_draw_key,self.p.bot_info.hash,False)
+                        if type(temp_draw) is not str:
+                            temp_draw = ''
+                        res = res.replace(temp_card,temp_draw,1)
+                        temp_card = re_card.match(res)
+                    if self.Favor.get(self.uid,False) == False:
+                        self.Favor[self.uid] = {'favor':0,'data':{}}
+                    if success:
+                        today_frequency += 1
+                        self.Favor[self.uid]['data'][k] = {'last_triggered':time.time(),'today_frequency':today_frequency}
+                    if type(change) is list:
+                        change_max = 10000
+                        if change[0] == None:
+                            change[0] = -change_max
+                        if change[1] == None:
+                            change[1] = change_max
+                        change = random.randint(change[0],change[1])
+                    if change != 0:
+                        change_reply = self.conf.get('FavorChange',None)
+                        self.Favor[self.uid]['favor'] += change
+                        change_abs = abs(change)
+                        if type(change_reply) is dict:
+                            change_reply:dict
+                            if change > 0:
+                                change_reply = change_reply.get('up',None)
+                            else:
+                                change_reply = change_reply.get('down',None)
+                        change_reply:str
+                        change_reply = '\n' + change_reply.format(change=change,change_abs=change_abs,now_favor=self.Favor[self.uid]['favor'],favor=favor,**self.conf)
+                    else:
+                        change_reply = None
                 res:str
                 if res == None:
                     return None
+                self.conf['favor'] = self.Favor[self.uid]['favor']
                 res = res.format(*re_temp.groups(),**self.conf)
                 self.save()
                 if change_reply:
@@ -446,8 +449,8 @@ def Check_admin(plugin_event):
     检查权限
     是不是master、群主、管理
     '''
+    flag_is_from_group_admin = False
     if 'role' in plugin_event.data.sender:
-        flag_is_from_group_admin = False
         if plugin_event.data.sender['role'] in ['owner', 'admin']:
             flag_is_from_group_admin = True
     flag_is_from_master = OlivaDiceCore.ordinaryInviteManager.isInMasterList(
