@@ -1,7 +1,11 @@
 {
     "name" : "DW好感度系统",
+    "author" : "Dr.Amber",
     "namespace" : "Favor",
     "priority" : 30000,
+    "svn" : 3,
+    "compatible_svn" : 95,
+    "message_mode" : "olivos_string",
     "support" : [
         {
             "sdk" : "all",

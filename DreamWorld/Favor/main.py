@@ -447,6 +447,7 @@ def Check_admin(plugin_event):
     是不是master、群主、管理
     '''
     if 'role' in plugin_event.data.sender:
+        flag_is_from_group_admin = False
         if plugin_event.data.sender['role'] in ['owner', 'admin']:
             flag_is_from_group_admin = True
     flag_is_from_master = OlivaDiceCore.ordinaryInviteManager.isInMasterList(
