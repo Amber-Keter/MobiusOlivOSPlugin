@@ -1,7 +1,6 @@
 #模块导入区
 import re                               #正则表达式库，用于匹配指令
 import Basic
-Basic.lib_dir = 'User'                  #定义文件数据目录
 
 '''
                         _               _  __    _
@@ -74,6 +73,9 @@ def MID(s:str,plugin_event = None,User = None):
 #类区
 class User:
     def __init__(self,plugin_event,target=None,if_find_root=True):
+        self.dir = 'User'
+        tmp_dir = Basic.lib_dir
+        Basic.lib_dir = self.dir
         self.p = plugin_event
         self.error = None
         self.all = Basic.ReadJson(Basic.path("User"))
@@ -106,6 +108,7 @@ class User:
             self.platform = tmp_user.get('platform',None)
             self.id = tmp_user.get('id',None)
             self.name = tmp_user.get('name',None)
+        Basic.lib_dir = tmp_dir
 
     def toRoot(self):
         self.uid = self.root

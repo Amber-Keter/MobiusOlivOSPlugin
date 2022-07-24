@@ -1,7 +1,6 @@
 #模块导入区
 import random
 import Basic
-Basic.lib_dir = 'Favor'                  #定义文件数据目录
 
 '''
                         _               _  __    _
@@ -32,17 +31,25 @@ rand(left,right)    ->随机改变，left、right为int型变量，代表favor�
 #类区
 class Favor:
     def __init__(self,uid):
+        self.dir = 'Favor'
+        tmp_dir = Basic.lib_dir
+        Basic.lib_dir = self.dir
         self.all = Basic.ReadJson(Basic.path('Data'))
         self.uid = uid
         self.favor = self.all.get(self.uid,{}).get('favor',0)
+        Basic.lib_dir = tmp_dir
+
 
     def save(self):
+        tmp_dir = Basic.lib_dir
+        Basic.lib_dir = self.dir
         if self.all.get(self.uid,False) != False:
             self.all[self.uid]['favor'] = self.favor
         else:
             self.all[self.uid] = {'data':{}}
             self.all[self.uid]['favor'] = self.favor
         Basic.WriteJson(Basic.path('Data'),self.all)
+        Basic.lib_dir = tmp_dir
     
     def change(self,x:int):
         if type(x) is int:
