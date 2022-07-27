@@ -60,8 +60,8 @@ save()                      ->保存，所有方法均在最后执行，仅在�
 change(x)                   ->改变，x为int型变量，代表level变化的值
 set(x)                      ->设置，x为int型变量，level将直接被设定为x
 check(target)               ->判断权限，target为int型变量时，判断level是否等于target，为str型变量时，寻找'List'词条下的[target]序列，判断level是否为该序列成员。
-checkAdmin(plugin_event)   ->判断是否为Admin
-checkMaster(plugin_event)  ->判断是否为Master
+checkAdmin(plugin_event)    ->判断是否为Admin
+checkMaster(plugin_event)   ->判断是否为Master
 '''
 
 #类区
