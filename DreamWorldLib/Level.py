@@ -2,7 +2,7 @@
 import Basic
 try:            #OlivaDiceCore模块导入与权限判断函数声明
     import OlivaDiceCore
-    def Check_admin(plugin_event):
+    def CheckAdmin(plugin_event):
         '''
         检查权限
         是不是master、群主、管理
@@ -18,7 +18,7 @@ try:            #OlivaDiceCore模块导入与权限判断函数声明
                     plugin_event.platform['platform']))  #检测是不是master
         return flag_is_from_master or flag_is_from_group_admin
 
-    def Check_master(plugin_event):
+    def CheckMaster(plugin_event):
         flag_is_from_master = OlivaDiceCore.ordinaryInviteManager.isInMasterList(
                 plugin_event.bot_info.hash,
                 OlivaDiceCore.userConfig.getUserHash(
@@ -26,10 +26,10 @@ try:            #OlivaDiceCore模块导入与权限判断函数声明
                     plugin_event.platform['platform']))  #检测是不是master
         return flag_is_from_master
 except:         #OlivaDiceCore模块缺失处理
-    def Check_admin(plugin_event):
+    def CheckAdmin(plugin_event):
         return False
     
-    def Check_master(plugin_event):
+    def CheckMaster(plugin_event):
         return False
 
 '''
@@ -60,8 +60,8 @@ save()                      ->保存，所有方法均在最后执行，仅在�
 change(x)                   ->改变，x为int型变量，代表level变化的值
 set(x)                      ->设置，x为int型变量，level将直接被设定为x
 check(target)               ->判断权限，target为int型变量时，判断level是否等于target，为str型变量时，寻找'List'词条下的[target]序列，判断level是否为该序列成员。
-check_admin(plugin_event)   ->判断是否为Admin
-check_master(plugin_event)  ->判断是否为Master
+checkAdmin(plugin_event)   ->判断是否为Admin
+checkMaster(plugin_event)  ->判断是否为Master
 '''
 
 #类区
@@ -108,12 +108,12 @@ class Level:
             else:
                 return False
     
-    def check_admin(self,plugin_event):
-        ovo_admin = Check_admin(plugin_event)
+    def checkAdmin(self,plugin_event):
+        ovo_admin = CheckAdmin(plugin_event)
         dw_admin = self.check('Admin')
         return ovo_admin or dw_admin
     
-    def check_master(self,plugin_event):
-        ovo_master = Check_master(plugin_event)
+    def checkMaster(self,plugin_event):
+        ovo_master = CheckMaster(plugin_event)
         dw_master = self.check('Master')
         return ovo_master or dw_master
