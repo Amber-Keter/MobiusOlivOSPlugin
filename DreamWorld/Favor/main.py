@@ -226,6 +226,12 @@ class Favor:
                                     res = Rand(r_common)
                                 else:
                                     res = r_common
+                                if type(res) is dict:
+                                    cd = res.get('cd',cd_default)
+                                    max = res.get('max',max_default)
+                                    change = res.get('change',0)
+                                    success = res.get('success',True)
+                                    res = res.get('reply',None)
                                 r_class = 'common'
                             if r_favor:
                                 if type(r_favor) is not list:
@@ -236,6 +242,10 @@ class Favor:
                                     i:dict
                                     interval = i.get('interval',[None,None])
                                     if interval is int and favor == interval:
+                                        cd = i.get('cd',cd_default)
+                                        max = i.get('max',max_default)
+                                        change = i.get('change',0)
+                                        success = i.get('success',True)
                                         res = i.get('reply',None)
                                         r_class = 'favor'
                                         break
@@ -247,6 +257,10 @@ class Favor:
                                         if interval[1] and favor > interval[1]:
                                             right = False
                                         if left and right:
+                                            cd = i.get('cd',cd_default)
+                                            max = i.get('max',max_default)
+                                            change = i.get('change',0)
+                                            success = i.get('success',True)
                                             res = i.get('reply',None)
                                             r_class = 'favor'
                                             break
@@ -259,6 +273,10 @@ class Favor:
                                     i:dict
                                     interval = i.get('interval',[None,None])
                                     if interval is int and level == interval:
+                                        cd = i.get('cd',cd_default)
+                                        max = i.get('max',max_default)
+                                        change = i.get('change',0)
+                                        success = i.get('success',True)
                                         res = i.get('reply',None)
                                         r_class = 'level'
                                         break
@@ -270,6 +288,10 @@ class Favor:
                                         if interval[1] and level > interval[1]:
                                             right = False
                                         if left and right:
+                                            cd = i.get('cd',cd_default)
+                                            max = i.get('max',max_default)
+                                            change = i.get('change',0)
+                                            success = i.get('success',True)
                                             res = i.get('reply',None)
                                             r_class = 'level'
                                             break
@@ -281,24 +303,32 @@ class Favor:
                                 for i in r_special:
                                     uid_list = i.get('uid',[])
                                     if uid_list is str and self.uid == uid_list:
+                                        cd = i.get('cd',cd_default)
+                                        max = i.get('max',max_default)
+                                        change = i.get('change',0)
+                                        success = i.get('success',True)
                                         res = i.get('reply',None)
                                         r_class = 'special'
                                         break
                                     elif type(uid_list) is list:
                                         if self.uid in uid_list:
+                                            cd = i.get('cd',cd_default)
+                                            max = i.get('max',max_default)
+                                            change = i.get('change',0)
+                                            success = i.get('success',True)
                                             res = i.get('reply',None)
                                             r_class = 'special'
                                             break
                     if type(res) is dict:
                         cd = res.get('cd',cd_default)
                         max = res.get('max',max_default)
-                        change = res.get('change',0)
-                        success = res.get('success',True)
+                        change = res.get('change',change)
+                        success = res.get('success',success)
                     else:
                         cd = cd_default
                         max = max_default
-                        change = 0
-                        success = True    
+                        change = change
+                        success = success   
                     all_interval = ['special','level','favor','common']    
                     if type(cd) is list:
                         cd:list
@@ -388,8 +418,6 @@ class Favor:
                                     return max_reply
                             else:
                                 today_frequency = 0
-                    if type(res) is dict:
-                        res = res.get('reply',None)
                     res = Rand(res)
                     if type(res) is dict:
                         res:dict

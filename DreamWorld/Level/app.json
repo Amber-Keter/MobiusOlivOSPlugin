@@ -1,7 +1,7 @@
 {
-    "name" : "DW用户系统",
+    "name" : "DW权限系统",
     "author" : "Dr.Amber",
-    "namespace" : "DW_User",
+    "namespace" : "DW_Level",
     "priority" : 30000,
     "svn" : 3,
     "compatible_svn" : 95,
