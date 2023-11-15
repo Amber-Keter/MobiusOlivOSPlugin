@@ -257,21 +257,15 @@ class User:
                 del Temp[token[0]]
                 WriteJson(path('Token'),Temp)
                 return "Error！申请已过期！"
-            if body['token'] != s:
+            elif body['token'] != s:
                 return "Error！Token错误！"
-            uid = self.User['Guest'][t_To[1]][t_To[0]]
-            self.User['Link'][t_From[1]][t_From[0]] = uid
-            self.save()
-            return "关联成功√"
-
-
-            
-
-
-        
-    
-    
-    
+            else:
+                uid = self.User['Guest'][t_To[1]][t_To[0]]
+                self.User['Link'][t_From[1]][t_From[0]] = uid
+                del Temp[token[0]]
+                WriteJson(path('Token'),Temp)
+                self.save()
+                return "关联成功√"
 
 
 
