@@ -35,22 +35,6 @@ checkMaster(plugin_event)   ->判断是否为Master
 
 try:            #OlivaDiceCore模块导入与权限判断函数声明
     import OlivaDiceCore
-    def CheckAdmin(plugin_event):
-        '''
-        检查权限
-        是不是master、群主、管理
-        '''
-        flag_is_from_group_admin = False
-        if 'role' in plugin_event.data.sender:
-            if plugin_event.data.sender['role'] in ['owner', 'admin']:
-                flag_is_from_group_admin = True
-        flag_is_from_master = OlivaDiceCore.ordinaryInviteManager.isInMasterList(
-                plugin_event.bot_info.hash,
-                OlivaDiceCore.userConfig.getUserHash(
-                    plugin_event.data.user_id, 'user',
-                    plugin_event.platform['platform']))  #检测是不是master
-        return flag_is_from_master or flag_is_from_group_admin
-
     def CheckMaster(plugin_event):
         flag_is_from_master = OlivaDiceCore.ordinaryInviteManager.isInMasterList(
                 plugin_event.bot_info.hash,
@@ -59,9 +43,6 @@ try:            #OlivaDiceCore模块导入与权限判断函数声明
                     plugin_event.platform['platform']))  #检测是不是master
         return flag_is_from_master
 except:         #OlivaDiceCore模块缺失处理
-    def CheckAdmin(plugin_event):
-        return False
-    
     def CheckMaster(plugin_event):
         return False
 
@@ -71,8 +52,8 @@ class Level:
         self.dir = 'Level'
         tmp_dir = Basic.lib_dir
         Basic.lib_dir = self.dir
-        self.all = Basic.ReadJson(Basic.path('Data'))
-        self.conf = Basic.ReadJson(Basic.path('Config'))
+        self.all = Basic.ReadJson(Basic.path('Data','Level'))
+        self.conf = Basic.ReadJson(Basic.path('Config','Level'))
         self.uid = uid
         self.default = self.conf.get('Default',0)
         self.level = self.all.get(self.uid,self.default)
@@ -83,7 +64,7 @@ class Level:
         tmp_dir = Basic.lib_dir
         Basic.lib_dir = self.dir
         self.all[self.uid] = self.level
-        Basic.WriteJson(Basic.path('Data'),self.all)
+        Basic.WriteJson(Basic.path('Data','Level'),self.all)
         Basic.lib_dir = tmp_dir
     
     def change(self,x:int):
@@ -96,7 +77,7 @@ class Level:
             self.level = x
             self.save()
 
-    def check(self,target:int):
+    def check(self,target:int or str):
         if type(target) is int:
             if target == self.level:
                 return True
@@ -110,11 +91,10 @@ class Level:
                 return False
     
     def checkAdmin(self,plugin_event):
-        ovo_admin = CheckAdmin(plugin_event)
         dw_admin = self.check('Admin')
         ovo_master = CheckMaster(plugin_event)
         dw_master = self.check('Master')
-        return ovo_admin or dw_admin or ovo_master or dw_master
+        return dw_admin or ovo_master or dw_master
     
     def checkMaster(self,plugin_event):
         ovo_master = CheckMaster(plugin_event)
