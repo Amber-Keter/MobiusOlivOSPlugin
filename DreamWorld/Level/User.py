@@ -1,6 +1,6 @@
 #模块导入区
 import re                               #正则表达式库，用于匹配指令
-import Basic
+from . import Basic
 
 '''
                         _               _  __    _
@@ -78,7 +78,9 @@ class User:
         Basic.lib_dir = self.dir
         self.p = plugin_event
         self.error = None
-        self.all = Basic.ReadJson(Basic.path("User"))
+        self.all = Basic.ReadJson(Basic.path("Data","User"))
+        if target == None:
+            target = self.p.data.user_id
         self.uid = MID(target,self.p,self.all)
         if self.uid[0] == False:
             self.error = self.uid[1]

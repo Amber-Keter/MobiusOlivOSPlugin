@@ -2,9 +2,9 @@
 import json                             #json序列化与反序列化模块
 import re                               #正则表达式库，用于匹配指令
 import os
-import Basic
-import User
-import LevelLib
+from . import Basic
+from . import User
+from . import LevelLib
 
 '''
                         _               _  __    _
@@ -32,11 +32,11 @@ class Event(object):
         if not os.path.exists("plugin/lib/DreamWorldLib"):
             os.mkdir("plugin/lib/DreamWorldLib")
         try:
-            Basic.ReadJson(Basic.path('Data'))
+            Basic.ReadJson(Basic.path('Data',"Level"))
         except:
-            Basic.WriteJson(Basic.path('Data'),{})
+            Basic.WriteJson(Basic.path('Data',"Level"),{})
         try:
-            Basic.ReadJson(Basic.path('Config'))
+            Basic.ReadJson(Basic.path('Config',"Level"))
         except:
             data = {
                 "Reply":"{nick}在{self}这的权限为{level}",
@@ -71,7 +71,7 @@ class Event(object):
                     "info":"*level info:\n获取当前账号权限信息",
                 }
             }
-            Basic.WriteJson(Basic.path('Config'),data)
+            Basic.WriteJson(Basic.path('Config',"Level"),data)
 #这段加文件初始化
 
 
@@ -91,15 +91,19 @@ class Level:
     def __init__(self,plugin_event):
         self.p = plugin_event
         self.User = User.User(self.p)
-        self.all = Basic.ReadJson(Basic.path('Data'))       #数据总集
-        self.conf = Basic.ReadJson(Basic.path('Config'))    #配置文件
+        self.all = Basic.ReadJson(Basic.path('Data','Level'))       #数据总集
+        self.conf = Basic.ReadJson(Basic.path('Config','Level'))    #配置文件
         self.default = self.conf.get('Default',0)
         self.level = self.all.get(self.User.uid,self.default)
     
     def info(self):
         n:dict = self.conf.get('Level',{}).get(str(self.level),{})
         reply:str = self.conf.get('Reply',"{nick}在{self}这的权限为{level}")
-        res = reply.format(nick=self.User.name,self=self.p.bot_info.name,level = self.level)
+        selfname = self.p.get_login_info()
+        if selfname == None:
+            selfname = {}
+        selfname = selfname.get('data',{}).get("name",'')
+        res = reply.format(nick=self.User.name,self=selfname,level = self.level)
         name = n.get('name','')
         info = n.get('info','')
         if name:
@@ -124,13 +128,13 @@ class Level:
         t_admin:bool = t.check('Admin') or t.check('Master')
         t_master:bool = t.check('Master')
         if target == 'User':
-            if s_admin and not t_admin:
+            if (s_admin and not t_admin) or (s_master and not t_master) or s_botmaster:
                 t.set(level)
                 res = '设置成功√'
             else:
                 res = '设置失败×\n原因：无授权指令'
         elif target == 'Admin':
-            if s_master and not t_master:
+            if (s_master and not t_master) or s_botmaster:
                 t.set(level)
                 res = '设置成功√'
             else:

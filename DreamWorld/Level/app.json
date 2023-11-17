@@ -4,8 +4,8 @@
     "info" : "基于User系统的权限控制插件",
     "namespace" : "DW_Level",
     "priority" : 30000,
-    "version" : "1.0.1",
-    "svn" : 1,
+    "version" : "1.0.2",
+    "svn" : 2,
     "compatible_svn" : 95,
     "message_mode" : "olivos_string",
     "support" : [

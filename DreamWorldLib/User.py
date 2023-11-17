@@ -78,7 +78,7 @@ class User:
         Basic.lib_dir = self.dir
         self.p = plugin_event
         self.error = None
-        self.all = Basic.ReadJson(Basic.path("User"))
+        self.all = Basic.ReadJson(Basic.path("Data","User"))
         self.uid = MID(target,self.p,self.all)
         if self.uid[0] == False:
             self.error = self.uid[1]
