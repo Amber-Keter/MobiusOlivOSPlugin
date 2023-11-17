@@ -96,7 +96,7 @@ class Level:
             self.level = x
             self.save()
 
-    def check(self,target:int):
+    def check(self,target:int or str):
         if type(target) is int:
             if target == self.level:
                 return True
