@@ -1,9 +1,11 @@
 {
     "name" : "DW用户系统",
     "author" : "Dr.Amber",
+    "info" : "简单的跨平台用户数据共享系统",
     "namespace" : "DW_User",
     "priority" : 30000,
-    "svn" : 3,
+    "version" : "1.3.5",
+    "svn" : 4,
     "compatible_svn" : 95,
     "message_mode" : "olivos_string",
     "support" : [
