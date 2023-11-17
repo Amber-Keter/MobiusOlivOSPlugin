@@ -1,9 +1,11 @@
 {
     "name" : "DW权限系统",
     "author" : "Dr.Amber",
+    "info" : "基于User系统的权限控制插件",
     "namespace" : "DW_Level",
     "priority" : 30000,
-    "svn" : 3,
+    "version" : "1.0.1",
+    "svn" : 1,
     "compatible_svn" : 95,
     "message_mode" : "olivos_string",
     "support" : [
