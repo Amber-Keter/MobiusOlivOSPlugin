@@ -103,12 +103,13 @@ class Level:
         if selfname == None:
             selfname = {}
         selfname = selfname.get('data',{}).get("name",'')
-        res = reply.format(nick=self.User.name,self=selfname,level = self.level)
         name = n.get('name','')
         info = n.get('info','')
+        level = "{level}".format(level = self.level)
         if name:
             separator = self.conf.get('Separator','-')
-            res += f"{separator}{name}"
+            level += f"{separator}{name}"
+        res = reply.format(nick=self.User.name,self=selfname,level = level)
         if info:
             res += f"\n{info}"
         return res
